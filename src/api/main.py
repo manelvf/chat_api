@@ -1,4 +1,8 @@
 """ App main entrypoint """
+import asyncio
+
+from bot import generate_bot_reply
+from connection_manager import ConnectionManager
 from storage import (
     add_user,
     get_user_from_session,
@@ -7,7 +11,6 @@ from storage import (
     save_message,
     InvalidUsernamePasswordError
 )
-from connection_manager import ConnectionManager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Response
 from fastapi.responses import HTMLResponse
@@ -77,6 +80,15 @@ async def websocket_endpoint(websocket: WebSocket):
             # Broadcast message to all clients
             await manager.broadcast(f"{username} says: {data}")
 
+            # Fake call to simulate bot response
+            asyncio.create_task(send_bot_response(data, username))
+
     except WebSocketDisconnect:
         manager.disconnect(websocket)
         await manager.broadcast(f"{username} has disconnected.")
+
+
+async def send_bot_response(user_message: str, username: str):
+    """Simulates a bot response to a user's message."""
+    bot_message = generate_bot_reply(user_message, username)
+    await manager.broadcast(f"Bot says: {bot_message}")
