@@ -1,5 +1,5 @@
 """ App main entrypoint """
-from .storage import (
+from storage import (
     add_user,
     get_user_from_session,
     get_user_by_username,
@@ -7,7 +7,7 @@ from .storage import (
     save_message,
     InvalidUsernamePasswordError
 )
-from .connection_manager import ConnectionManager
+from connection_manager import ConnectionManager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Response
 from fastapi.responses import HTMLResponse
